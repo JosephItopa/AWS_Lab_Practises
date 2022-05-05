@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Itopa Mono Connect</title>
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      font-size: larger;
+      max-width: 300px;
+      text-align: center;
+      padding: 5em;
+    }
+
+    .button {
+      color: white;
+      background-color: rgb(31, 63, 10);
+      font-size: large;
+      padding: 0.5em;
+      border-radius: 4px;
+      border: 2px solid rgba(18, 58, 6, 0.5);
+    }
+
+    .button:hover {
+      color: white;
+      background-color: black;
+    }
+  </style>
+  <script type="application/javascript" src="https://connect.withmono.com/connect.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <p>Welcome to Mono Connect.</p>
+    <button id="launch-btn" class="button">Link a financial account</button>
+  </div>
+
+  <script type="application/javascript">
+    const launchBtn = document.getElementById('launch-btn');
+    let connect;
+
+    const copyToClipboard = text => {
+      const textElem = document.createElement('textarea');
+      textElem.value = text;
+      document.body.appendChild(textElem);
+      textElem.select();
+      document.execCommand('copy');
+      document.body.removeChild(textElem);
+    };
+
+    let config = {
+      // Public Key
+      key: "live_pk_hQRKk9cX2ntzByVMAtmH",
+      onSuccess: function (response) {
+        // When successful copy the response code to clipboard
+        copyToClipboard(response.code);
+        console.log(JSON.stringify(response));
+        alert(JSON.stringify(response));
+        /**
+        response : { "code": "code_xyz" }
+        you can send this code back to your server to get this
+        authenticated account and start making requests.
+        */
+      },
+      onClose: function () {
+        console.log('user closed the widget.')
+      }
+    };
+
+    // Create and setup a new connect instance
+    connect = new Connect(config);
+    connect.setup();
+
+    // Open/launch the Mono-Connect Widget
+    launchBtn.onclick = function (e) {
+      connect.open();
+    };
+  </script>
+</body>
+
+</html>
